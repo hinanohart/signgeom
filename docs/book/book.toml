@@ -1,0 +1,21 @@
+[book]
+title = "signgeom — signature-parametric geometry"
+authors = ["signgeom contributors"]
+description = "An mdBook covering the maths and ergonomics of signgeom."
+language = "en"
+multilingual = false
+src = "src"
+
+[build]
+build-dir = "book"
+
+[output.html]
+default-theme = "navy"
+preferred-dark-theme = "navy"
+git-repository-url = "https://github.com/hinanohart/signgeom"
+edit-url-template = "https://github.com/hinanohart/signgeom/edit/main/docs/book/{path}"
+no-section-label = false
+
+[output.html.fold]
+enable = true
+level = 1

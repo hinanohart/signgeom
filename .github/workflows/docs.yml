@@ -1,0 +1,56 @@
+name: docs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: docs
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: install mdbook
+        run: cargo install --locked --version 0.4.40 mdbook
+      - name: rustdoc
+        run: cargo doc --workspace --no-deps
+      - name: mdbook build
+        working-directory: docs/book
+        run: mdbook build
+      - name: build web demo
+        working-directory: web
+        run: |
+          if command -v pnpm >/dev/null; then pnpm install; else npm install; fi
+          npm run build
+      - name: assemble site
+        run: |
+          mkdir -p site
+          cp -r target/doc site/rustdoc
+          cp -r docs/book/book/* site/
+          mkdir -p site/demo && cp -r web/dist/* site/demo/
+          # Default landing page redirects to the book.
+          printf '<!doctype html><meta http-equiv="refresh" content="0; url=./index.html">' > site/_landing.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

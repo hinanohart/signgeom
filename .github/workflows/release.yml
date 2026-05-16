@@ -1,0 +1,65 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  build-artifacts:
+    name: build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+      - uses: Swatinem/rust-cache@v2
+      - name: build CLI
+        run: cargo build --release -p signgeom-cli --target ${{ matrix.target }}
+      - name: package
+        shell: bash
+        run: |
+          mkdir -p dist
+          if [ "${{ runner.os }}" = "Windows" ]; then
+            cp target/${{ matrix.target }}/release/signgeom.exe dist/
+          else
+            cp target/${{ matrix.target }}/release/signgeom dist/
+          fi
+          cp LICENSE NOTICE README.md CHANGELOG.md dist/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signgeom-${{ matrix.target }}
+          path: dist/
+
+  publish-release:
+    needs: build-artifacts
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+      - name: tarball each platform
+        run: |
+          cd artifacts
+          for d in */; do
+            name="${d%/}"
+            tar czf "${name}.tar.gz" "${d}"
+          done
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*.tar.gz
+          body_path: CHANGELOG.md

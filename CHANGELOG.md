@@ -1,0 +1,63 @@
+# Changelog
+
+All notable changes to signgeom are documented here. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/); we use semantic
+versioning, but consider every 0.x release potentially breaking.
+
+## [Unreleased]
+
+## [0.1.0] — 2026-05-17
+
+The first release of signgeom. The headline idea is that the *signature*
+`(p, q, r)` of a metric is a value in the API, so a single kernel handles
+Euclidean, Lorentzian, Egan-style `(4, 0, 0)` "Orthogonal" and `(2, 2, 0)`
+"Dichronauts" geometries.
+
+### Added
+
+- **`signgeom-core`** crate:
+  - `Signature` value type with `riemannian`, `minkowski`, `orthogonal4`,
+    `dichronauts4`, `galilean` named constructors.
+  - `Manifold` trait with a default central-difference implementation of
+    `metric_partials`.
+  - `christoffel`, `riemann`, `ricci`, `scalar_curvature` free functions.
+  - RK4 geodesic integrator with configurable step count, proper time,
+    blow-up threshold and singular-metric tolerance.
+  - `MinkowskiFlat` (constant-metric flat manifold of any signature) and
+    `Schwarzschild` (`M = 1` test bed).
+- **`signgeom-aperiodic`** crate: Wang-tile data structure, east/north
+  adjacency, and a Turing-machine-to-tile-set encoder.
+- **`signgeom-lenia`** crate: a small Flow-Lenia-style continuous CA on a
+  flat background. Signature-aware kernels are exposed via a future
+  extension point.
+- **`signgeom-cli`** crate: a `clap`-based CLI with `signature`, `geodesic`,
+  `ricci`, `tiling`, `lenia` subcommands.
+- **Web demo** under `web/`: a TypeScript + Three.js (WebGPU when available)
+  reference UI that integrates the same geodesic in four signatures.
+- **Documentation**: rustdoc with `#![warn(missing_docs)]` on every public
+  item, plus an mdBook under `docs/book/` covering the signature concept,
+  Christoffel symbols, geodesics and a "license strategy" page on Greg
+  Egan's themes.
+- **Tests**: 34 tests across unit, property (`proptest`) and integration
+  suites, including a Schwarzschild Ricci-flat sanity check at four points.
+- **CI**: GitHub Actions matrix (Linux/macOS/Windows × stable Rust) plus
+  `cargo audit`, `cargo deny`, `gitleaks`, web `tsc` + `vite build`,
+  rustdoc and mdBook deploy to GitHub Pages.
+- **Licensing**: Apache-2.0 (`LICENSE`), with a `NOTICE` file recording the
+  Egan-inspiration-but-independent-implementation policy and a
+  `plugins/egan-applets/LICENSE-PENDING.md` stub reserved for v0.2+.
+
+### Known limitations
+
+- WebGPU geodesic compute is implemented for the flat case only; curved
+  metrics still use the CPU integrator.
+- `signgeom-lenia` integrates on a Euclidean `(2, 0, 0)` background only;
+  signature-aware Lenia kernels are scheduled for a later release.
+- Python bindings (`pyo3`) and Julia bindings (`jlrs`) are deferred to
+  v0.2+, as recorded in `architecture/decision-log.md`.
+- `f32`-only WebGPU pipelines may drift on long geodesic integrations
+  (Earth-mass black hole, > 10⁴ steps). Use the CPU path for high-precision
+  work until the planned double-single emulation lands.
+
+[Unreleased]: https://github.com/hinanohart/signgeom/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/hinanohart/signgeom/releases/tag/v0.1.0

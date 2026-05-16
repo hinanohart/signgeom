@@ -1,0 +1,75 @@
+:root {
+  color-scheme: dark;
+  --fg: #e6e8ea;
+  --bg: #0e0f12;
+  --bg-alt: #15171c;
+  --accent: #7cc4ff;
+  --muted: #8a8f99;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: ui-monospace, "JetBrains Mono", "Fira Code", Menlo, monospace;
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+header { padding: 1.5rem 2rem 0.5rem; }
+header h1 { margin: 0 0 0.25rem; font-size: 1.6rem; font-weight: 600; letter-spacing: 0.5px; }
+header .tagline { color: var(--muted); margin: 0; max-width: 60ch; }
+
+main {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1rem;
+  padding: 1rem 2rem;
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+  background: var(--bg-alt);
+  border: 1px solid #25282f;
+  border-radius: 6px;
+  display: block;
+}
+
+aside fieldset {
+  border: 1px solid #25282f;
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem 0.8rem;
+  margin: 0 0 0.8rem;
+}
+aside legend { color: var(--accent); padding: 0 0.3em; }
+aside label { display: block; margin: 0.15rem 0; }
+aside input[type="number"] {
+  background: #0a0b0d; color: var(--fg);
+  border: 1px solid #2a2d34; border-radius: 4px;
+  padding: 0.15rem 0.4rem; width: 5rem; font: inherit;
+}
+aside input[type="radio"] { accent-color: var(--accent); margin-right: 0.4rem; }
+
+button {
+  background: var(--accent); color: #0a0b0d; border: 0;
+  padding: 0.45rem 0.9rem; border-radius: 4px;
+  font: inherit; font-weight: 600; cursor: pointer;
+}
+button:hover { filter: brightness(1.1); }
+
+pre#status {
+  margin: 0.8rem 0 0; padding: 0.4rem 0.6rem;
+  background: #0a0b0d; border-radius: 4px; color: var(--muted);
+  white-space: pre-wrap; max-height: 12rem; overflow-y: auto;
+}
+.note { color: var(--muted); font-size: 0.85rem; margin: 0.6rem 0 0; }
+
+footer {
+  border-top: 1px solid #25282f;
+  margin-top: 1rem; padding: 1rem 2rem;
+  color: var(--muted); font-size: 0.85rem;
+}
+footer a { color: var(--accent); }

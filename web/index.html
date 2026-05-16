@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>signgeom — light cones, four signatures</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>signgeom</h1>
+      <p class="tagline">
+        A geodesic, integrated four times in four different metric
+        signatures. Same kernel, same initial conditions, different
+        geometries.
+      </p>
+    </header>
+    <main>
+      <canvas id="stage" width="1024" height="640"></canvas>
+      <aside id="controls">
+        <fieldset>
+          <legend>Signature</legend>
+          <label><input type="radio" name="sig" value="riemannian" /> Euclidean (4, 0, 0)</label>
+          <label><input type="radio" name="sig" value="minkowski" checked /> Minkowski (3, 1, 0)</label>
+          <label><input type="radio" name="sig" value="orthogonal4" /> "Orthogonal" (4, 0, 0), Egan</label>
+          <label><input type="radio" name="sig" value="dichronauts4" /> "Dichronauts" (2, 2, 0), Egan</label>
+        </fieldset>
+        <fieldset>
+          <legend>Initial velocity</legend>
+          <label>
+            v<sub>0</sub> = (<input id="v0" type="number" step="0.05" value="0.5" />, 0, 0, 1)
+          </label>
+          <label>
+            τ<sub>max</sub> = <input id="taumax" type="number" step="0.5" value="5.0" />
+          </label>
+          <label>steps = <input id="steps" type="number" step="50" value="200" min="1" /></label>
+        </fieldset>
+        <button id="run">Re-integrate</button>
+        <pre id="status">ready.</pre>
+        <p class="note">
+          WebGPU adapter is preferred; if not available the demo falls back to
+          a software path written purely in TypeScript (still correct, just
+          slower for large step counts).
+        </p>
+      </aside>
+    </main>
+    <footer>
+      <p>
+        signgeom is licensed Apache-2.0. The story themes are inspired by Greg
+        Egan's fiction; no code or applet asset from
+        <a href="https://www.gregegan.net">gregegan.net</a> was inspected. See
+        <code>NOTICE</code> in the repository.
+      </p>
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

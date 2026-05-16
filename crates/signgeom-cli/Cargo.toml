@@ -1,0 +1,26 @@
+[package]
+name = "signgeom-cli"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+homepage.workspace = true
+authors.workspace = true
+keywords.workspace = true
+categories.workspace = true
+description = "Command-line front-end for the signgeom library."
+readme = "../../README.md"
+
+[[bin]]
+name = "signgeom"
+path = "src/main.rs"
+
+[dependencies]
+signgeom-core.workspace = true
+signgeom-aperiodic.workspace = true
+signgeom-lenia.workspace = true
+clap.workspace = true
+thiserror.workspace = true
+serde.workspace = true
+serde_json.workspace = true
