@@ -40,8 +40,10 @@ impl Manifold for Schwarzschild {
 
     fn signature(&self) -> Signature {
         // Last coordinate is t; we keep "mostly plus" by placing the
-        // negative eigenvalue at index 3.
-        Signature::new(3, 1, 0)
+        // negative eigenvalue at index 3. This is the same as
+        // `Signature::minkowski(4)` — Schwarzschild is asymptotically
+        // Lorentzian.
+        Signature::minkowski(4)
     }
 
     fn metric(&self, point: &[f64]) -> Result<MetricTensor, Error> {
@@ -51,11 +53,11 @@ impl Manifold for Schwarzschild {
                 actual: point.len(),
             });
         }
-        // (r, θ, φ, t)
+        // (r, θ, φ, t). φ and t do not appear in the diagonal Schwarzschild
+        // components in these coordinates (spherical symmetry absorbs φ,
+        // time-translation invariance absorbs t).
         let r = point[0];
         let theta = point[1];
-        let _phi = point[2];
-        let _t = point[3];
 
         if r.abs() < 1e-9 {
             return Err(Error::SingularMetric {

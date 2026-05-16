@@ -14,9 +14,7 @@
 use crate::christoffel::christoffel_with;
 use crate::error::Error;
 use crate::manifold::Manifold;
-
-const DEFAULT_FD_STEP: f64 = 1e-3;
-const DEFAULT_SINGULAR_TOL: f64 = 1e-12;
+use crate::{DEFAULT_FD_STEP, DEFAULT_SINGULAR_TOL};
 
 /// Riemann curvature tensor `R^a_{bcd}(x)`, indexed `r[a][b][c][d]`.
 pub fn riemann<M: Manifold + ?Sized>(

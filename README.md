@@ -21,28 +21,33 @@ eigenvalues — as a first-class type parameter. The same kernel computes:
 The intent is to make non-Euclidean geometry as easy to compute, visualise and
 embed in the browser as Euclidean geometry already is.
 
-## Features (v0.1.0)
+## Features (v0.1.x)
 
-- **`signgeom-core`** — `Signature<P, Q, R>` type-level signature, `Manifold`
-  trait, Christoffel symbols, Riemann curvature, geodesic integration.
-- **`signgeom-aperiodic`** — Wang-tile / einstein-hat tilings on
-  signature-aware manifolds; a small Turing-tile compiler.
-- **`signgeom-lenia`** — *Flow-Lenia*-style continuous cellular automata on
-  arbitrary-signature backgrounds.
-- **`signgeom-cli`** — command-line front-end.
-- **`web/`** — TypeScript + Three.js r171 WebGPU demo (WebGL2 fallback).
+- **`signgeom-core`** — value-type `Signature { p, q, r }` (const-constructible
+  with `Signature::riemannian(n)` / `minkowski(n)` / `orthogonal4()` /
+  `dichronauts4()` / `galilean(n)`), `Manifold` trait, Christoffel symbols,
+  Riemann / Ricci / scalar curvature, RK4 geodesic integrator.
+- **`signgeom-aperiodic`** — Wang-tile matching rules, east/north adjacency,
+  and a small Turing-machine-to-tile-set compiler. The 2023 einstein-hat
+  monotile is on the v0.1.x roadmap.
+- **`signgeom-lenia`** — a small Flow-Lenia-style continuous CA on a flat
+  Euclidean background. A signature-aware kernel is on the v0.2 roadmap.
+- **`signgeom-cli`** — `clap`-based command-line front-end.
+- **`web/`** — TypeScript + Three.js r171 WebGPU demo. The WGSL compute
+  kernel covers 4D flat metrics only in v0.1.0; CPU/GPU agreement is
+  validated to single-precision tolerance (≤ 1e-5 relative), not bitwise.
 
 ## Quickstart
 
 ```bash
 cargo build --release
-cargo test
+cargo test --workspace
 cargo run -p signgeom-cli -- --help
 
-# Try the bundled examples
-cargo run --example light_cone_orthogonal
-cargo run --example dichronauts_geodesic
-cargo run --example schwarzschild_compare
+# Try the bundled examples (example crate is signgeom-core)
+cargo run -p signgeom-core --example light_cone_orthogonal
+cargo run -p signgeom-core --example dichronauts_geodesic
+cargo run -p signgeom-core --example schwarzschild_compare
 ```
 
 ## Greg Egan note (please read)

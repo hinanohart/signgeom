@@ -39,8 +39,20 @@
 #![warn(missing_docs)]
 // Tensor maths reads naturally with nested index loops on small Vec<Vec<…>>
 // matrices; the alternative iterator+enumerate chains hurt readability without
-// changing performance for `n ≤ 6`.
+// changing performance for `n ≤ 6`. v0.2 will migrate to `nalgebra::DMatrix`
+// once benchmarks justify the API churn (decision-log D8).
 #![allow(clippy::needless_range_loop, clippy::type_complexity)]
+
+/// Default finite-difference step used by Christoffel and curvature
+/// numerical kernels. Chosen so that the central-difference truncation
+/// error is around `1e-6` for well-behaved metrics with derivatives of
+/// O(1). Override via the `*_with` variants of each function.
+pub(crate) const DEFAULT_FD_STEP: f64 = 1e-3;
+
+/// Default tolerance for declaring a metric tensor singular when its
+/// determinant magnitude drops below this value during Gauss-Jordan
+/// inversion. Override via the `*_with` variants of each function.
+pub(crate) const DEFAULT_SINGULAR_TOL: f64 = 1e-12;
 
 mod christoffel;
 mod curvature;

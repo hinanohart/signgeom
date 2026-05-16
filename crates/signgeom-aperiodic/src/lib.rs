@@ -127,10 +127,12 @@ impl TileSet {
 /// `dir = -1` for left. The output tile set tiles the half-plane iff the
 /// machine halts; this is the textbook proof of undecidability of the Wang
 /// tiling problem.
+///
+/// The number of states is implicit in `transitions` (it equals the size of
+/// the projection of the first component of each transition source).
 #[must_use]
 pub fn turing_machine_to_tileset(
     signature: Signature,
-    _n_states: u16,
     n_symbols: u16,
     transitions: &[((u16, u16), (u16, u16, i8))],
 ) -> TileSet {
@@ -194,7 +196,6 @@ mod tests {
     fn turing_encoding_produces_at_least_one_tile_per_transition() {
         let ts = turing_machine_to_tileset(
             Signature::riemannian(2),
-            2,
             2,
             &[
                 ((0, 0), (1, 1, 1)),

@@ -12,9 +12,7 @@
 
 use crate::error::Error;
 use crate::manifold::{invert_symmetric, Manifold};
-
-const DEFAULT_FD_STEP: f64 = 1e-4;
-const DEFAULT_SINGULAR_TOL: f64 = 1e-12;
+use crate::{DEFAULT_FD_STEP, DEFAULT_SINGULAR_TOL};
 
 /// Christoffel symbols of the second kind at `point`, indexed
 /// `gamma[k][i][j]`.

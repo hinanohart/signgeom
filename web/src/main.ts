@@ -11,6 +11,7 @@ import {
   Signature,
   SignatureKey,
   canonicalDiagonal,
+  dim,
 } from "./signature";
 
 const status = document.getElementById("status") as HTMLPreElement;
@@ -77,6 +78,12 @@ async function runWebGPU(
   steps: number,
 ): Promise<GpuRun | null> {
   if (!gpu) return null;
+  // v0.1.x WGSL kernel is specialised to 4D flat metrics; higher- and lower-
+  // dimensional cases use the CPU integrator. See decision-log D3 / D10.
+  if (dim(sig) !== 4) {
+    log(`GPU kernel limited to dim=4 in v0.1.x; falling back to CPU.`);
+    return null;
+  }
   const { device, pipeline, bindGroupLayout } = gpu;
 
   // Params: eta vec4, v0 vec4, steps u32, tau_max f32, _pad u32, u32 -> 12 floats / ints.
@@ -112,53 +119,60 @@ async function runWebGPU(
     usage: GPUBufferUsage.COPY_DST | GPUBufferUsage.MAP_READ,
   });
 
-  const bindGroup = device.createBindGroup({
-    layout: bindGroupLayout,
-    entries: [
-      { binding: 0, resource: { buffer: paramBuf } },
-      { binding: 1, resource: { buffer: storage } },
-    ],
-  });
-
-  const encoder = device.createCommandEncoder();
-  const pass = encoder.beginComputePass();
-  pass.setPipeline(pipeline);
-  pass.setBindGroup(0, bindGroup);
-  pass.dispatchWorkgroups(Math.ceil((steps + 1) / 64));
-  pass.end();
-  encoder.copyBufferToBuffer(storage, 0, readBack, 0, totalBytes);
-
-  const t0 = performance.now();
-  device.queue.submit([encoder.finish()]);
-  await readBack.mapAsync(GPUMapMode.READ);
-  const t1 = performance.now();
-  const copy = readBack.getMappedRange().slice(0);
-  readBack.unmap();
-  paramBuf.destroy();
-  storage.destroy();
-
-  const view = new Float32Array(copy);
-  const samples: PathSample[] = [];
-  for (let i = 0; i <= steps; i++) {
-    const base = (i * sampleStride) / 4;
-    samples.push({
-      position: [
-        view[base + 0] ?? 0,
-        view[base + 1] ?? 0,
-        view[base + 2] ?? 0,
-        view[base + 3] ?? 0,
+  try {
+    const bindGroup = device.createBindGroup({
+      layout: bindGroupLayout,
+      entries: [
+        { binding: 0, resource: { buffer: paramBuf } },
+        { binding: 1, resource: { buffer: storage } },
       ],
-      velocity: [
-        view[base + 4] ?? 0,
-        view[base + 5] ?? 0,
-        view[base + 6] ?? 0,
-        view[base + 7] ?? 0,
-      ],
-      tau: view[base + 8] ?? 0,
-      ds2: view[base + 9] ?? 0,
     });
+
+    const encoder = device.createCommandEncoder();
+    const pass = encoder.beginComputePass();
+    pass.setPipeline(pipeline);
+    pass.setBindGroup(0, bindGroup);
+    pass.dispatchWorkgroups(Math.ceil((steps + 1) / 64));
+    pass.end();
+    encoder.copyBufferToBuffer(storage, 0, readBack, 0, totalBytes);
+
+    const t0 = performance.now();
+    device.queue.submit([encoder.finish()]);
+    await readBack.mapAsync(GPUMapMode.READ);
+    const t1 = performance.now();
+    const copy = readBack.getMappedRange().slice(0);
+    readBack.unmap();
+
+    const view = new Float32Array(copy);
+    const samples: PathSample[] = [];
+    for (let i = 0; i <= steps; i++) {
+      const base = (i * sampleStride) / 4;
+      samples.push({
+        position: [
+          view[base + 0] ?? 0,
+          view[base + 1] ?? 0,
+          view[base + 2] ?? 0,
+          view[base + 3] ?? 0,
+        ],
+        velocity: [
+          view[base + 4] ?? 0,
+          view[base + 5] ?? 0,
+          view[base + 6] ?? 0,
+          view[base + 7] ?? 0,
+        ],
+        tau: view[base + 8] ?? 0,
+        ds2: view[base + 9] ?? 0,
+      });
+    }
+    return { samples, millis: t1 - t0 };
+  } finally {
+    // WebGPU buffers are not garbage-collected; explicitly release them so
+    // repeated runs do not accumulate GPU memory (Chrome 122+ would
+    // eventually OOM the adapter).
+    paramBuf.destroy();
+    storage.destroy();
+    readBack.destroy();
   }
-  return { samples, millis: t1 - t0 };
 }
 
 function draw(samples: PathSample[], key: SignatureKey, gpuPath: PathSample[] | null): void {

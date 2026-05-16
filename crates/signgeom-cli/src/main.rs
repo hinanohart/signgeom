@@ -74,10 +74,8 @@ struct RicciArgs {
 
 #[derive(Debug, clap::Args)]
 struct TilingArgs {
-    /// Number of TM states.
-    #[arg(long, default_value_t = 2)]
-    states: u16,
-    /// Number of TM symbols.
+    /// Number of TM symbols. The number of states is implicit in the
+    /// hard-coded transition table used for this demonstration encoding.
     #[arg(long, default_value_t = 2)]
     symbols: u16,
 }
@@ -175,7 +173,6 @@ fn run() -> Result<(), Box<dyn std::error::Error>> {
         Cmd::Tiling(args) => {
             let ts: TileSet = turing_machine_to_tileset(
                 Signature::riemannian(2),
-                args.states,
                 args.symbols,
                 &[
                     ((0, 0), (1, 1, 1)),

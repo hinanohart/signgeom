@@ -53,8 +53,10 @@ jobs:
         run: cargo install --locked cargo-audit
       - name: cargo audit
         run: cargo audit
+      # Pin cargo-deny to the latest version that still supports the MSRV of
+      # the current stable toolchain. cargo-deny 0.19+ requires rustc 1.88+.
       - name: install cargo-deny
-        run: cargo install --locked cargo-deny
+        run: cargo install --locked --version "^0.18" cargo-deny
       - name: cargo deny check
         run: cargo deny check
 
@@ -83,6 +85,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITLEAKS_LICENSE: ""
+      # gitleaks/gitleaks-action@v2 requires a paid GITLEAKS_LICENSE for
+      # organisation accounts; we invoke the binary directly instead so the
+      # job stays free and reproducible.
+      - name: install gitleaks
+        run: |
+          set -euo pipefail
+          VERSION="8.21.2"
+          curl -fsSL -o gitleaks.tar.gz \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${VERSION}/gitleaks_${VERSION}_linux_x64.tar.gz"
+          tar -xzf gitleaks.tar.gz gitleaks
+          sudo mv gitleaks /usr/local/bin/
+          gitleaks version
+      - name: run gitleaks
+        run: gitleaks detect --source . --no-banner --redact --verbose

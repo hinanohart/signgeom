@@ -48,6 +48,11 @@ impl Signature {
     ///
     /// Requires `n >= 1`. For `n = 4` this is the signature of ordinary
     /// general relativity.
+    ///
+    /// # Panics
+    ///
+    /// Panics if `n == 0`. A Lorentzian metric requires at least one
+    /// timelike direction, which already accounts for `n = 1`.
     #[must_use]
     pub const fn minkowski(n: usize) -> Self {
         assert!(n >= 1, "Minkowski signature requires n >= 1");

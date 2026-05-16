@@ -40,10 +40,14 @@ export function integrateFlat(
   let ds2 = 0;
   path.push({ position: [...x], velocity: [...v], tau: 0, ds2: 0 });
   for (let i = 1; i <= opts.steps; i++) {
-    for (let k = 0; k < x.length; k++) x[k] = x[k] + dt * v[k];
+    for (let k = 0; k < x.length; k++) x[k] = (x[k] ?? 0) + dt * (v[k] ?? 0);
     // ds² = η_{kk} (v^k)² dt for the flat metric
     let line = 0;
-    for (let k = 0; k < v.length; k++) line += eta[k]! * v[k]! * v[k]!;
+    for (let k = 0; k < v.length; k++) {
+      const eta_k = eta[k] ?? 0;
+      const v_k = v[k] ?? 0;
+      line += eta_k * v_k * v_k;
+    }
     ds2 += line * dt;
     path.push({ position: [...x], velocity: [...v], tau: i * dt, ds2 });
   }
