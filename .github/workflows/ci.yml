@@ -53,12 +53,13 @@ jobs:
         run: cargo install --locked cargo-audit
       - name: cargo audit
         run: cargo audit
-      # cargo-deny 0.18+ requires rustc 1.88+. Install the prebuilt binary
-      # instead of `cargo install` so the job is decoupled from MSRV drift.
+      # cargo-deny 0.19+ requires rustc 1.88 to build from source but ships
+      # precompiled binaries; we use the binary so we get current CVSS 4.0
+      # advisory-DB support without the MSRV churn.
       - name: install cargo-deny
         run: |
           set -euo pipefail
-          VERSION="0.18.4"
+          VERSION="0.19.6"
           TARBALL="cargo-deny-${VERSION}-x86_64-unknown-linux-musl.tar.gz"
           curl -fsSL -o cd.tar.gz \
             "https://github.com/EmbarkStudios/cargo-deny/releases/download/${VERSION}/${TARBALL}"
