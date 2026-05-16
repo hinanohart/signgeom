@@ -9,7 +9,7 @@ members = [
 default-members = ["crates/signgeom-core", "crates/signgeom-cli"]
 
 [workspace.package]
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 rust-version = "1.85"
 license = "Apache-2.0"
@@ -20,9 +20,9 @@ keywords = ["geometry", "physics", "differential-geometry", "manifold", "visuali
 categories = ["mathematics", "science", "simulation"]
 
 [workspace.dependencies]
-signgeom-core = { path = "crates/signgeom-core", version = "0.1.1" }
-signgeom-aperiodic = { path = "crates/signgeom-aperiodic", version = "0.1.1" }
-signgeom-lenia = { path = "crates/signgeom-lenia", version = "0.1.1" }
+signgeom-core = { path = "crates/signgeom-core", version = "0.1.2" }
+signgeom-aperiodic = { path = "crates/signgeom-aperiodic", version = "0.1.2" }
+signgeom-lenia = { path = "crates/signgeom-lenia", version = "0.1.2" }
 thiserror = "1.0"
 num-traits = "0.2"
 rayon = "1.10"

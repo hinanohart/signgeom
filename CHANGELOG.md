@@ -6,6 +6,21 @@ versioning, but consider every 0.x release potentially breaking.
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-05-17
+
+A security-only patch on top of 0.1.1. No API changes.
+
+### Security
+
+- **Bump `vite` from `^5.4.10` to `^6.4.2`** to pick up the path-traversal
+  fix for optimized-deps `.map` handling (GHSA-4w7w-66w2-5vf9 /
+  CVE-2026-39365). Only affects the dev server when exposed via
+  `--host`, but worth closing.
+- **Indirectly bump `esbuild` to `>= 0.25.0`** (via the vite upgrade),
+  closing the dev-server CORS finding (GHSA-67mh-4wv8-2f99).
+- Both findings only affect the local `vite dev` server, not the
+  production `vite build` output that ships to GitHub Pages.
+
 ## [0.1.1] — 2026-05-17
 
 A post-release hardening pass driven by a 3-agent audit (architecture
@@ -128,6 +143,7 @@ Euclidean, Lorentzian, Egan-style `(4, 0, 0)` "Orthogonal" and `(2, 2, 0)`
   (Earth-mass black hole, > 10⁴ steps). Use the CPU path for high-precision
   work until the planned double-single emulation lands.
 
-[Unreleased]: https://github.com/hinanohart/signgeom/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/hinanohart/signgeom/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/hinanohart/signgeom/releases/tag/v0.1.2
 [0.1.1]: https://github.com/hinanohart/signgeom/releases/tag/v0.1.1
 [0.1.0]: https://github.com/hinanohart/signgeom/releases/tag/v0.1.0
