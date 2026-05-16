@@ -53,12 +53,20 @@ jobs:
         run: cargo install --locked cargo-audit
       - name: cargo audit
         run: cargo audit
-      # Pin cargo-deny to the latest version that still supports the MSRV of
-      # the current stable toolchain. cargo-deny 0.19+ requires rustc 1.88+.
+      # cargo-deny 0.18+ requires rustc 1.88+. Install the prebuilt binary
+      # instead of `cargo install` so the job is decoupled from MSRV drift.
       - name: install cargo-deny
-        run: cargo install --locked --version "^0.18" cargo-deny
+        run: |
+          set -euo pipefail
+          VERSION="0.18.4"
+          TARBALL="cargo-deny-${VERSION}-x86_64-unknown-linux-musl.tar.gz"
+          curl -fsSL -o cd.tar.gz \
+            "https://github.com/EmbarkStudios/cargo-deny/releases/download/${VERSION}/${TARBALL}"
+          tar -xzf cd.tar.gz
+          sudo mv "cargo-deny-${VERSION}-x86_64-unknown-linux-musl/cargo-deny" /usr/local/bin/
+          cargo-deny --version
       - name: cargo deny check
-        run: cargo deny check
+        run: cargo-deny check
 
   web-typecheck:
     name: web tsc
