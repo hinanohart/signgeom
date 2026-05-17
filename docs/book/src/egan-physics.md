@@ -7,14 +7,13 @@ naming and the pedagogical motivation, not the formulas.
 ## "Orthogonal" `(4, 0, 0)`
 
 In Egan's *Orthogonal* trilogy (*The Clockwork Rocket*, *The Eternal
-Flame*, *The Arrows of Time*) the universe has signature `(4, 0, 0)`. Every
-direction is geometrically interchangeable; the velocity-time-symmetry that
-underwrites special relativity is replaced by a full four-rotation
-symmetry. Light has a maximum frequency rather than a maximum speed, and
-elementary particles have a *positive* rest energy density rather than a
-negative one. signgeom does not implement any of those physical
-predictions — it just gives you the geometry and lets you check the
-kinematics.
+Flame*, *The Arrows of Time*) the universe has signature `(4, 0, 0)`. The
+geometric consequence — a single positive-definite metric on four
+dimensions — is well-defined and is what signgeom implements. The novels
+explore what kind of physics could be hosted on such a geometry, but
+signgeom takes no position on any of those physical predictions: it just
+ships the geometry and lets you check the kinematics, leaving any
+field-theoretic interpretation to the reader.
 
 ## "Dichronauts" `(2, 2, 0)`
 

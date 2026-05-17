@@ -1,20 +1,17 @@
 {
   "name": "signgeom-web",
   "private": true,
-  "version": "0.1.2",
+  "version": "0.1.3",
   "type": "module",
-  "description": "WebGPU demo for signgeom (Three.js r171 + WGSL).",
+  "description": "WebGPU + Canvas2D demo for signgeom (browser WebGPU API + WGSL).",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 4173",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": {
-    "three": "^0.171.0"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@types/three": "^0.171.0",
     "@webgpu/types": "^0.1.50",
     "typescript": "^5.6.3",
     "vite": "^6.4.2"

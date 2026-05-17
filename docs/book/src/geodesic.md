@@ -8,9 +8,10 @@ A *geodesic* is a curve `x(τ)` whose covariant acceleration vanishes:
 
 In a Riemannian setting this is the shortest-path equation; in Lorentzian
 signature it splits into timelike, spacelike and null classes according to
-the sign of `g_{ij} (dx^i/dτ)(dx^j/dτ)`. In Egan's `(2, 2, 0)` you get four
-combinations rather than three (see the `dichronauts_geodesic` example in
-`crates/signgeom-core/examples/`).
+the sign of `g_{ij} (dx^i/dτ)(dx^j/dτ)`. In Egan's `(2, 2, 0)` the same
+three causal classes apply, but the cone structure is richer because two
+distinct directions can be timelike (see the `dichronauts_geodesic`
+example in `crates/signgeom-core/examples/`).
 
 ## Numerical integration
 

@@ -6,6 +6,57 @@ versioning, but consider every 0.x release potentially breaking.
 
 ## [Unreleased]
 
+## [0.1.3] — 2026-05-17
+
+A 4th-pass audit hardening (architect + critic + code-reviewer + critic
+synthesis) caught one fresh honesty defect and several smaller
+inconsistencies that slipped through the v0.1.1 round. No new features;
+every change is a correctness, honesty, or hygiene fix.
+
+### Fixed
+
+- **`web/` declared `three` and `@types/three` but never imported them.**
+  README, the v0.1.0 CHANGELOG entry, and the r/rust announcement draft
+  claimed "Three.js r171", but `grep -rn 'three' web/src/` returned
+  nothing — the demo has always used `canvas.getContext("2d")` for
+  drawing. Both dependencies are dropped from `web/package.json`; the
+  three user-facing surfaces are rewritten to "browser WebGPU API +
+  Canvas2D, no Three.js".
+- **r/rust announcement claimed the `wgpu` Rust crate.** The crate is
+  not in `Cargo.toml`. The browser demo uses the standard
+  `navigator.gpu` API directly. The draft now states this explicitly
+  and frames "should I adopt wgpu?" as a discussion question rather
+  than an asserted fact.
+- **`README.md` claimed Schwarzschild known-values checked to `1e-6`.**
+  The actual epsilon in `tests/integration_schwarzschild.rs` is
+  `5e-3` (FD noise on a fourth-derivative quantity). README corrected.
+- **`CODE_OF_CONDUCT.md` pointed reports to "the email address listed in
+  `Cargo.toml`".** `Cargo.toml` lists no email address — the CoC was
+  effectively unreachable. Reports are now routed through the GitHub
+  Security Advisories tab (private) or a `[conduct]`-prefixed issue
+  (public).
+- **`docs/book/src/geodesic.md` said `(2, 2, 0)` has "four causal
+  combinations rather than three"**, contradicting `egan-physics.md`
+  (which correctly lists three classes) and the implementation in
+  `examples/dichronauts_geodesic.rs` (three sign-of-`ds²` classes).
+  Unified to the three-class description with a note that the cone
+  structure is richer because two directions can be timelike.
+- **`docs/book/src/egan-physics.md` paraphrased Egan's physics
+  predictions** (light has a maximum frequency, etc.) as bare facts.
+  Rewritten to attribute the predictions to the novels and clarify
+  that signgeom takes no position on the field-theoretic
+  interpretation. Brings the chapter into line with the NOTICE /
+  license-strategy stance.
+- **`GeodesicConfig::default()` hard-coded `1e-3` and `1e-12`** instead
+  of referencing `crate::DEFAULT_FD_STEP` / `crate::DEFAULT_SINGULAR_TOL`
+  that v0.1.1 introduced for exactly this reason. The same drift bug
+  v0.1.1 caught in `christoffel.rs` / `curvature.rs` was latent here.
+
+### Changed
+
+- **`web/package.json` `description`** updated to "WebGPU + Canvas2D
+  demo for signgeom (browser WebGPU API + WGSL)".
+
 ## [0.1.2] — 2026-05-17
 
 A security-only patch on top of 0.1.1. No API changes.
@@ -116,8 +167,12 @@ Euclidean, Lorentzian, Egan-style `(4, 0, 0)` "Orthogonal" and `(2, 2, 0)`
   extension point.
 - **`signgeom-cli`** crate: a `clap`-based CLI with `signature`, `geodesic`,
   `ricci`, `tiling`, `lenia` subcommands.
-- **Web demo** under `web/`: a TypeScript + Three.js (WebGPU when available)
-  reference UI that integrates the same geodesic in four signatures.
+- **Web demo** under `web/`: a TypeScript reference UI built directly on
+  the browser WebGPU API (no `wgpu` Rust crate, no Three.js) with a
+  Canvas2D rendering layer, integrating the same geodesic in four
+  signatures. (v0.1.0 shipped with a `three` dependency that was never
+  imported; the dependency was dropped in v0.1.3 — see that entry for
+  the honesty correction.)
 - **Documentation**: rustdoc with `#![warn(missing_docs)]` on every public
   item, plus an mdBook under `docs/book/` covering the signature concept,
   Christoffel symbols, geodesics and a "license strategy" page on Greg
@@ -143,7 +198,8 @@ Euclidean, Lorentzian, Egan-style `(4, 0, 0)` "Orthogonal" and `(2, 2, 0)`
   (Earth-mass black hole, > 10⁴ steps). Use the CPU path for high-precision
   work until the planned double-single emulation lands.
 
-[Unreleased]: https://github.com/hinanohart/signgeom/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/hinanohart/signgeom/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/hinanohart/signgeom/releases/tag/v0.1.3
 [0.1.2]: https://github.com/hinanohart/signgeom/releases/tag/v0.1.2
 [0.1.1]: https://github.com/hinanohart/signgeom/releases/tag/v0.1.1
 [0.1.0]: https://github.com/hinanohart/signgeom/releases/tag/v0.1.0

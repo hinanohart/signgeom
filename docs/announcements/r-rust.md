@@ -55,9 +55,12 @@ Things I'd love feedback on:
 1. **API ergonomics for tensor indices.** Right now everything is
    `Vec<Vec<f64>>` for legibility; would a `ndarray` or `nalgebra`
    second-tier surface be welcome, or is the current shape acceptable?
-2. **WebGPU + `wgpu`.** I'm using `wgpu`/WGSL plus Three.js for the
-   browser demo; the compute path runs the same kernel as the CPU.
-   Is there a better idiom for "compute → readback → draw" loops?
+2. **WebGPU + WGSL (no `wgpu` crate, no Three.js).** I'm using the
+   browser-standard WebGPU API directly with a Canvas2D rendering
+   layer; the compute path runs the same kernel as the CPU. Is there a
+   better idiom for "compute → readback → draw" loops, and would
+   adopting the `wgpu` Rust crate (compiled to WASM) be worth the
+   binary-size cost for this kind of demo?
 3. **MSRV.** I've pinned 1.85 to keep `const fn` and 2021-edition gates
    simple. Should I push it down further?
 

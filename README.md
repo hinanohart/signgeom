@@ -33,9 +33,11 @@ embed in the browser as Euclidean geometry already is.
 - **`signgeom-lenia`** — a small Flow-Lenia-style continuous CA on a flat
   Euclidean background. A signature-aware kernel is on the v0.2 roadmap.
 - **`signgeom-cli`** — `clap`-based command-line front-end.
-- **`web/`** — TypeScript + Three.js r171 WebGPU demo. The WGSL compute
-  kernel covers 4D flat metrics only in v0.1.0; CPU/GPU agreement is
-  validated to single-precision tolerance (≤ 1e-5 relative), not bitwise.
+- **`web/`** — TypeScript browser demo using the standard WebGPU API
+  (no `wgpu` Rust crate, no Three.js) with Canvas2D rendering. The WGSL
+  compute kernel covers 4D flat metrics only in v0.1.x; CPU/GPU
+  agreement is validated to single-precision tolerance (≤ 1e-5
+  relative), not bitwise.
 
 ## Quickstart
 
@@ -67,8 +69,10 @@ See [`NOTICE`](NOTICE) and [`docs/book/src/license-strategy.md`](docs/book/src/l
 
 This is an early alpha. The public API may break before v1.0. Numerical
 results should be regarded as "directionally correct" until a v1.0 release —
-property tests cover sign-invariants, Schwarzschild known-values are checked
-to 1e-6 in tests, but long geodesic integrations on WebGPU `f32` may drift.
+property tests cover sign-invariants, Schwarzschild Ricci-flatness is
+checked to ≤ 5e-3 absolute (the dominant cost is fourth-derivative
+finite-difference noise), and long geodesic integrations on WebGPU `f32`
+may drift.
 
 ## Contributing
 

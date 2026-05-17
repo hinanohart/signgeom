@@ -34,8 +34,8 @@ impl Default for GeodesicConfig {
         Self {
             steps: 1000,
             proper_time: 1.0,
-            fd_step: 1e-3,
-            singular_tol: 1e-12,
+            fd_step: crate::DEFAULT_FD_STEP,
+            singular_tol: crate::DEFAULT_SINGULAR_TOL,
             blowup_threshold: 1e9,
         }
     }

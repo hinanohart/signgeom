@@ -31,9 +31,12 @@ be considered inappropriate in a professional setting.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the project maintainers at the email address listed in
-`Cargo.toml`. All complaints will be reviewed and investigated promptly and
-fairly.
+reported privately via the
+[GitHub Security Advisories tab](https://github.com/hinanohart/signgeom/security/advisories/new)
+on this repository (private vulnerability disclosure is also used for
+conduct reports while the project lacks a dedicated security mailbox), or
+publicly by opening an issue with a `[conduct]` prefix in the title. All
+complaints will be reviewed and investigated promptly and fairly.
 
 The full Contributor Covenant text is at
 <https://www.contributor-covenant.org/version/2/1/code_of_conduct/>.
