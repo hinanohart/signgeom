@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Signature-parametric (pseudo-)Riemannian geometry in Rust + WebGPU"
+authors:
+  - family-names: "Hart"
+    given-names: "Hinano"
+    alias: "hinanohart"
+type: software
+license: "NOASSERTION"
+repository-code: "https://github.com/hinanohart/signgeom"
+url: "https://hinanohart.github.io/signgeom"
+version: "0.1.3"
+date-released: "2026-05-16"
+keywords:
+  - "computational-geometry"
+  - "differential-geometry"
+  - "general-relativity"
+  - "lorentzian"
+  - "manifold"
+  - "open-source"
+  - "physics"
+  - "rust"
+  - "schwarzschild"
+  - "webgpu"
+  - "wgsl"
+  - "greg-egan"
+  - "pseudo-riemannian"
