@@ -37,7 +37,7 @@ jobs:
             cp target/${{ matrix.target }}/release/signgeom dist/
           fi
           cp LICENSE NOTICE README.md CHANGELOG.md dist/
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: signgeom-${{ matrix.target }}
           path: dist/
