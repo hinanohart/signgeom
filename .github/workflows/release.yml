@@ -59,7 +59,7 @@ jobs:
             name="${d%/}"
             tar czf "${name}.tar.gz" "${d}"
           done
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: artifacts/*.tar.gz
           body_path: CHANGELOG.md
