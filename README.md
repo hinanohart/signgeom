@@ -1,6 +1,6 @@
 # signgeom
 
-[![License](https://img.shields.io/badge/license-Apache--2.0-blue)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Rust](https://img.shields.io/badge/rust-1.85%2B-orange)](rust-toolchain.toml)
 [![Status](https://img.shields.io/badge/status-early%20alpha-yellow)]()
 
@@ -81,4 +81,4 @@ the [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 
 ## License
 
-Apache-2.0. See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).
+MIT. See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).
