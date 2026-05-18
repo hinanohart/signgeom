@@ -81,4 +81,4 @@ the [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md).
 
 ## License
 
-Apache-2.0. See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).
+MIT. See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE).
