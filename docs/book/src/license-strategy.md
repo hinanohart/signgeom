@@ -1,6 +1,6 @@
 # Licence strategy
 
-signgeom is permissively licensed under Apache-2.0. The strategy below
+signgeom is permissively dual-licensed under MIT OR Apache-2.0. The strategy below
 explains how an Egan-themed library avoids Egan's copyright.
 
 ## The library code

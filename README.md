@@ -63,7 +63,7 @@ peer-reviewed papers). **No code, applet source or asset from
 
 signgeom is not endorsed by or affiliated with Greg Egan.
 
-See [`NOTICE`](NOTICE) and [`docs/book/src/license-strategy.md`](docs/book/src/license-strategy.md).
+See [`docs/book/src/license-strategy.md`](docs/book/src/license-strategy.md).
 
 ## Status
 
