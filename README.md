@@ -1,6 +1,6 @@
 # signgeom
 
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT_OR_Apache--2.0-green)](#license)
 [![Rust](https://img.shields.io/badge/rust-1.85%2B-orange)](rust-toolchain.toml)
 [![Status](https://img.shields.io/badge/status-early%20alpha-yellow)]()
 
