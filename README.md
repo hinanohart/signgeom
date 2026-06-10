@@ -39,7 +39,6 @@ flowchart TD
     MAN --> WEB
     APERIODIC --> CLI
     LENIA --> CLI
-    GEO --> WEB
 ```
 
 ## What is this?
@@ -82,7 +81,7 @@ cargo run -p signgeom-core --example schwarzschild_compare
    constructors cover the common cases: `Signature::riemannian(n)`,
    `minkowski(n)`, `orthogonal4()`, `dichronauts4()`, `galilean(n)`.
 
-2. **`Manifold` trait** — implement `g_ij(x) -> MetricTensor` (and optionally
+2. **`Manifold` trait** — implement `metric(x) -> MetricTensor` (and optionally
    analytic partial derivatives). When derivatives are omitted, the library
    falls back to second-order central finite differences with step `1e-3`.
 
@@ -92,10 +91,9 @@ cargo run -p signgeom-core --example schwarzschild_compare
    `Vec<GeodesicState>`.
 
 4. **WebGPU demo** (`web/`) — a TypeScript app that spawns a WGSL compute
-   shader alongside the CPU RK4 path for four metric signatures, overlays both
-   results on a Canvas2D canvas, and reports agreement to single-precision
-   tolerance (≤ 1e-5 relative). Falls back to CPU-only when WebGPU is
-   unavailable.
+   shader alongside the CPU flat-metric integrator for four metric signatures,
+   overlays both results on a Canvas2D canvas, and reports the CPU/GPU
+   endpoint delta. Falls back to CPU-only when WebGPU is unavailable.
 
 5. **`signgeom-aperiodic`** — Wang-tile matching rules, east/north adjacency,
    and a small Turing-machine-to-tile-set compiler.
@@ -115,7 +113,7 @@ cargo run -p signgeom-core --example schwarzschild_compare
 - **`signgeom-cli`** — `clap`-based command-line front-end covering all
   sub-libraries.
 - **`web/`** — TypeScript / WebGPU browser demo with Canvas2D rendering; CPU
-  and GPU paths validated to ≤ 1e-5 relative tolerance (not bitwise).
+  and GPU paths render side-by-side for visual comparison (not bitwise).
 
 ## Greg Egan note (please read)
 
