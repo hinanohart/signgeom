@@ -8,36 +8,60 @@
 
 signgeom is a small computational geometry library that treats the *signature*
 of a metric — `(p, q, r)`, the number of positive, negative, and degenerate
-eigenvalues — as a first-class type parameter. The same kernel computes:
+eigenvalues — as a first-class type parameter. The same kernel computes
+geodesics, Christoffel symbols, and curvature tensors across Euclidean,
+Minkowski, split-signature, and degenerate geometries, all from a single
+generic code path.
+
+## Architecture
+
+```mermaid
+flowchart TD
+    SIG[Signature p_q_r]
+    MAN[Manifold trait]
+    CHR[Christoffel symbols]
+    CUR[Riemann Ricci scalar curvature]
+    GEO[RK4 Geodesic integrator]
+    FLAT[MinkowskiFlat]
+    SCH[Schwarzschild]
+    APERIODIC[signgeom-aperiodic Wang tiles]
+    LENIA[signgeom-lenia Flow Lenia CA]
+    CLI[signgeom-cli clap front-end]
+    WEB[web TypeScript WebGPU demo]
+
+    SIG --> MAN
+    MAN --> CHR
+    CHR --> CUR
+    CHR --> GEO
+    FLAT --> MAN
+    SCH --> MAN
+    MAN --> CLI
+    MAN --> WEB
+    APERIODIC --> CLI
+    LENIA --> CLI
+    GEO --> WEB
+```
+
+## What is this?
+
+A given spacetime or abstract manifold has a metric with a *signature* — the
+pattern of +1/−1/0 along its diagonal. Classical Riemannian geometry uses all
++1 (positive-definite); special relativity uses (3,1) or (1,3) Minkowski
+spacetime; Greg Egan's *Orthogonal* novels explore a universe with all +1 but
+where the time dimension has the same sign as the spatial ones.
+
+signgeom lets you write `Signature::minkowski(4)` or `Signature::orthogonal4()`
+and run the exact same Christoffel / geodesic / curvature code in each
+geometry without branching. The WebGPU front-end validates the CPU path in
+the browser via a parallel WGSL compute kernel.
 
 | Signature | Familiar name | Where it appears |
 |---|---|---|
-| `(n, 0)` | Riemannian | classical geometry, machine learning |
-| `(n−1, 1)` | Lorentzian / Minkowski | relativity, the universe we live in |
-| `(n, 0)` with `n = 4` | "Orthogonal" | Greg Egan's *Orthogonal* trilogy |
-| `(2, 2)` | split / neutral | Egan's *Dichronauts* |
+| `(n, 0, 0)` | Riemannian | classical geometry, machine learning |
+| `(n−1, 1, 0)` | Lorentzian / Minkowski | relativity, the universe we live in |
+| `(4, 0, 0)` | "Orthogonal" | Greg Egan's *Orthogonal* trilogy |
+| `(2, 2, 0)` | split / neutral | Egan's *Dichronauts* |
 | `(p, q, r)` with `r > 0` | degenerate | Galilean / Newton–Cartan |
-
-The intent is to make non-Euclidean geometry as easy to compute, visualise and
-embed in the browser as Euclidean geometry already is.
-
-## Features (v0.1.x)
-
-- **`signgeom-core`** — value-type `Signature { p, q, r }` (const-constructible
-  with `Signature::riemannian(n)` / `minkowski(n)` / `orthogonal4()` /
-  `dichronauts4()` / `galilean(n)`), `Manifold` trait, Christoffel symbols,
-  Riemann / Ricci / scalar curvature, RK4 geodesic integrator.
-- **`signgeom-aperiodic`** — Wang-tile matching rules, east/north adjacency,
-  and a small Turing-machine-to-tile-set compiler. The 2023 einstein-hat
-  monotile is on the v0.1.x roadmap.
-- **`signgeom-lenia`** — a small Flow-Lenia-style continuous CA on a flat
-  Euclidean background. A signature-aware kernel is on the v0.2 roadmap.
-- **`signgeom-cli`** — `clap`-based command-line front-end.
-- **`web/`** — TypeScript browser demo using the standard WebGPU API
-  (no `wgpu` Rust crate, no Three.js) with Canvas2D rendering. The WGSL
-  compute kernel covers 4D flat metrics only in v0.1.x; CPU/GPU
-  agreement is validated to single-precision tolerance (≤ 1e-5
-  relative), not bitwise.
 
 ## Quickstart
 
@@ -46,11 +70,52 @@ cargo build --release
 cargo test --workspace
 cargo run -p signgeom-cli -- --help
 
-# Try the bundled examples (example crate is signgeom-core)
+# Bundled examples (run in signgeom-core)
 cargo run -p signgeom-core --example light_cone_orthogonal
 cargo run -p signgeom-core --example dichronauts_geodesic
 cargo run -p signgeom-core --example schwarzschild_compare
 ```
+
+## How it works
+
+1. **`Signature { p, q, r }`** is a small const-constructible value type. Named
+   constructors cover the common cases: `Signature::riemannian(n)`,
+   `minkowski(n)`, `orthogonal4()`, `dichronauts4()`, `galilean(n)`.
+
+2. **`Manifold` trait** — implement `g_ij(x) -> MetricTensor` (and optionally
+   analytic partial derivatives). When derivatives are omitted, the library
+   falls back to second-order central finite differences with step `1e-3`.
+
+3. **Pure functions** — `christoffel`, `riemann`, `ricci`, `scalar_curvature`,
+   `integrate_geodesic` operate on `&dyn Manifold`. The RK4 integrator takes
+   a `GeodesicConfig` (steps, affine-parameter range) and returns a
+   `Vec<GeodesicState>`.
+
+4. **WebGPU demo** (`web/`) — a TypeScript app that spawns a WGSL compute
+   shader alongside the CPU RK4 path for four metric signatures, overlays both
+   results on a Canvas2D canvas, and reports agreement to single-precision
+   tolerance (≤ 1e-5 relative). Falls back to CPU-only when WebGPU is
+   unavailable.
+
+5. **`signgeom-aperiodic`** — Wang-tile matching rules, east/north adjacency,
+   and a small Turing-machine-to-tile-set compiler.
+
+6. **`signgeom-lenia`** — Flow-Lenia-style continuous cellular automaton on a
+   flat Euclidean background.
+
+## Features (v0.1.x)
+
+- **`signgeom-core`** — `Signature`, `Manifold` trait, Christoffel symbols,
+  Riemann / Ricci / scalar curvature, RK4 geodesic integrator, built-in
+  `MinkowskiFlat` and `Schwarzschild` manifolds.
+- **`signgeom-aperiodic`** — Wang-tile adjacency rules and Turing-machine
+  compiler; 2023 einstein-hat monotile is on the v0.1.x roadmap.
+- **`signgeom-lenia`** — Flow-Lenia-style CA; signature-aware kernel is on
+  the v0.2 roadmap.
+- **`signgeom-cli`** — `clap`-based command-line front-end covering all
+  sub-libraries.
+- **`web/`** — TypeScript / WebGPU browser demo with Canvas2D rendering; CPU
+  and GPU paths validated to ≤ 1e-5 relative tolerance (not bitwise).
 
 ## Greg Egan note (please read)
 
@@ -69,10 +134,9 @@ See [`docs/book/src/license-strategy.md`](docs/book/src/license-strategy.md).
 
 This is an early alpha. The public API may break before v1.0. Numerical
 results should be regarded as "directionally correct" until a v1.0 release —
-property tests cover sign-invariants, Schwarzschild Ricci-flatness is
-checked to ≤ 5e-3 absolute (the dominant cost is fourth-derivative
-finite-difference noise), and long geodesic integrations on WebGPU `f32`
-may drift.
+property tests cover sign-invariants, Schwarzschild Ricci-flatness is checked
+to ≤ 5e-3 absolute (the dominant cost is fourth-derivative finite-difference
+noise), and long geodesic integrations on WebGPU `f32` may drift.
 
 ## Contributing
 
@@ -90,4 +154,6 @@ at your option.
 
 ### Contribution
 
-Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
+Unless you explicitly state otherwise, any contribution intentionally submitted
+for inclusion in the work by you, as defined in the Apache-2.0 license, shall
+be dual licensed as above, without any additional terms or conditions.
