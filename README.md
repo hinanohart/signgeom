@@ -15,31 +15,9 @@ generic code path.
 
 ## Architecture
 
-```mermaid
-flowchart TD
-    SIG[Signature p_q_r]
-    MAN[Manifold trait]
-    CHR[Christoffel symbols]
-    CUR[Riemann Ricci scalar curvature]
-    GEO[RK4 Geodesic integrator]
-    FLAT[MinkowskiFlat]
-    SCH[Schwarzschild]
-    APERIODIC[signgeom-aperiodic Wang tiles]
-    LENIA[signgeom-lenia Flow Lenia CA]
-    CLI[signgeom-cli clap front-end]
-    WEB[web TypeScript WebGPU demo]
-
-    SIG --> MAN
-    MAN --> CHR
-    CHR --> CUR
-    CHR --> GEO
-    FLAT --> MAN
-    SCH --> MAN
-    MAN --> CLI
-    MAN --> WEB
-    APERIODIC --> CLI
-    LENIA --> CLI
-```
+<div align="center">
+  <img src="docs/architecture.png" alt="signgeom architecture" width="840">
+</div>
 
 ## What is this?
 
@@ -155,3 +133,4 @@ at your option.
 Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you, as defined in the Apache-2.0 license, shall
 be dual licensed as above, without any additional terms or conditions.
+

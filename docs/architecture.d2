@@ -1,0 +1,56 @@
+direction: down
+explanation: |md
+  ### signgeom
+  **Signature-parametric Riemannian / pseudo-Riemannian geometry in Rust, with a WebGPU front-end.**
+| {near: top-center}
+
+sig: "① Signature (p,q,r)" {shape: oval; style: {fill: "#6366f1"; font-color: "#ffffff"; stroke: "#4338ca"; bold: true; font-size: 18}}
+
+manifold: "② Manifold trait" {style: {fill: "#0ea5e9"; font-color: "#ffffff"; stroke: "#0369a1"; bold: true; font-size: 18}}
+
+impl_zone: "Manifold Implementations" {
+  style: {fill: "#fffbeb"; stroke: "#f59e0b"; font-color: "#92400e"; bold: true; font-size: 16}
+  flat: "MinkowskiFlat"
+  sch: "Schwarzschild"
+  *.style.fill: "#fef3c7"; *.style.font-color: "#92400e"
+}
+
+compute_zone: "③ Geometric Computation" {
+  style: {fill: "#f0fdf4"; stroke: "#10b981"; font-color: "#065f46"; bold: true; font-size: 16}
+  chr: "③ Christoffel Symbols"
+  cur: "Riemann / Ricci\nscalar curvature"
+  geo: "RK4 Geodesic\nintegrator"
+  *.style.fill: "#dcfce7"; *.style.font-color: "#065f46"
+}
+
+ext_zone: "Extension Crates" {
+  style: {fill: "#fffbeb"; stroke: "#f59e0b"; font-color: "#92400e"; bold: true; font-size: 16}
+  aperiodic: "signgeom-aperiodic\nWang tiles"
+  lenia: "signgeom-lenia\nFlow Lenia CA"
+  *.style.fill: "#fef3c7"; *.style.font-color: "#92400e"
+}
+
+frontend_zone: "④ Frontends" {
+  style: {fill: "#fdf2f8"; stroke: "#ec4899"; font-color: "#9d174e"; bold: true; font-size: 16}
+  cli: "④ signgeom-cli\nclap front-end"
+  web: "web\nTypeScript / WebGPU"
+  *.style.fill: "#fdf2f8"; *.style.font-color: "#9d174e"
+}
+
+sig -> manifold: "① type param"
+impl_zone.flat -> manifold: "impl"
+impl_zone.sch -> manifold: "impl"
+manifold -> compute_zone.chr: "② compute"
+compute_zone.chr -> compute_zone.cur: "③ derive"
+compute_zone.chr -> compute_zone.geo: "③ integrate"
+manifold -> frontend_zone.cli: "④ expose"
+manifold -> frontend_zone.web: "④ expose"
+ext_zone.aperiodic -> frontend_zone.cli
+ext_zone.lenia -> frontend_zone.cli
+
+legend: "Legend" {
+  near: bottom-center
+  style: {fill: "#f8fafc"; stroke: "#cbd5e1"; font-size: 13}
+  e: "● entry"; c: "● core"; p: "● processing"; b: "● extension"; d: "● output"
+  e.style.font-color: "#4338ca"; c.style.font-color: "#0369a1"; p.style.font-color: "#10b981"; b.style.font-color: "#f59e0b"; d.style.font-color: "#ec4899"
+}
